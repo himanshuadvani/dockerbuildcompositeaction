@@ -1,4 +1,3 @@
-# action.yml
 name: 'Build Image and push to Amazon ECR'
 description: 'Build Docker image and pusht to Amazon ECR'
 inputs:
