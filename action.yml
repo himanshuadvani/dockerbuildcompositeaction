@@ -1,0 +1,28 @@
+# action.yml
+name: 'Build Image and push to Amazon ECR'
+description: 'Build Docker image and pusht to Amazon ECR'
+inputs:
+  ecr_registry:
+    description: 'Amazon Elastic Container Registry'
+    required: true
+  ecr_repository:
+    description: 'Amazon Elastic Container Repository'
+    required: true
+    default: mindstix/alpine
+  image_tag:
+    description: 'DockerImage tag'
+    required: true
+outputs:
+  image:
+    description: 'DockerImage tag'
+    value: ${{ steps.image_name.outputs.image }}
+runs:
+  using: 'composite'
+  steps:
+    - run: docker build -t ${{ inputs.ecr_registry }}/${{ inputs.ecr_repository }}:${{ inputs.image_tag }} .
+      shell: bash
+    - run: docker push ${{ inputs.ecr_registry }}/${{ inputs.ecr_repository }}:${{ inputs.image_tag }}
+      shell: bash
+    - id: image_name
+      run: echo "::set-output name=image::${{ inputs.image_tag }}"
+      shell: bash
